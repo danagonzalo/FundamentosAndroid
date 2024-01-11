@@ -27,12 +27,10 @@ class HeroesListAdapter(private val callback: Callback): RecyclerView.Adapter<He
                     .into(ivHeroPhoto)
 
                 if(hero.isDead) {
-                    tvNotAvailable.visibility = View.VISIBLE
                     root.isEnabled = false
                     constraintLayout.setBackgroundColor(ContextCompat.getColor(root.context, R.color.gray))
                     ivHeroPhoto.setColorFilter(R.color.gray)
                 } else {
-                    tvNotAvailable.visibility = View.GONE
                     root.isEnabled = true
                     constraintLayout.setBackgroundColor(ContextCompat.getColor(root.context, R.color.white))
                     ivHeroPhoto.clearColorFilter()
@@ -58,8 +56,8 @@ class HeroesListAdapter(private val callback: Callback): RecyclerView.Adapter<He
         holder.showItem(heroesList[position])
     }
 
-    fun update(heroesList: Heroes) {
-        if (this.heroesList.isEmpty()) {
+    fun update(heroesList: Heroes, isForceUpdate: Boolean) {
+        if (this.heroesList.isEmpty() || isForceUpdate) {
             this.heroesList = heroesList
             notifyDataSetChanged()
         }

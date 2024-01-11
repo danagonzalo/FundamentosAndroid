@@ -61,21 +61,6 @@
             android:gravity="end"
             tools:text="75/100 HP" />
 
-        <TextView
-            android:id="@+id/tvNotAvailable"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:text="NO DISPONIBLE"
-            android:textColor="@color/dark_red"
-            android:textSize="35sp"
-            android:textStyle="bold"
-            android:visibility="gone"
-            tools:visibility="visible"/>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

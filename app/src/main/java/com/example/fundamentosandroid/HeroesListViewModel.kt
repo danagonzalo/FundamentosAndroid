@@ -15,10 +15,11 @@ class HeroesListViewModel: ViewModel() {
 
     private val _uiState = MutableStateFlow<State>(State.Normal)
     val uiState: StateFlow<State> = _uiState
+    private var heroesList = mutableListOf<Hero>()
 
     sealed class State {
         data object Normal: State()
-        data class Loaded(val heroes: Heroes): State()
+        data class Loaded(val heroes: Heroes, val forceUpdateList: Boolean = false): State()
         data class Error(val message: String): State()
     }
 
@@ -42,12 +43,20 @@ class HeroesListViewModel: ViewModel() {
 
             if (response.isSuccessful) {
                 val heroesDtoList =  Gson().fromJson(response.body?.string(), Array<HeroDto>::class.java)
-                val heroesList = heroesDtoList.map { hero ->
+                heroesList = heroesDtoList.map { hero ->
                     Hero(hero.id, hero.name, hero.photo)
                 }.toMutableList()
                 _uiState.value = State.Loaded(heroesList)
             }
             else _uiState.value = State.Error(response.message)
         }
+    }
+
+    fun healAllHeroes() {
+        heroesList.forEach {
+            it.fullHeal()
+        }
+
+        _uiState.value = State.Loaded(heroesList, true)
     }
 }

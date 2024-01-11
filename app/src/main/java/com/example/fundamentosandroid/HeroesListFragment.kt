@@ -31,16 +31,16 @@ class HeroesListFragment: Fragment(), Callback {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel.loadHeroes()
         binding = FragmentHeroesListBinding.inflate(inflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        selectedHero = null
+        viewModel.loadHeroes()
         setAdapter()
         setObservers()
+        setListeners()
     }
 
     override fun heroClicked(hero: Hero) {
@@ -70,10 +70,16 @@ class HeroesListFragment: Fragment(), Callback {
                         Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
                     }
                     is HeroesListViewModel.State.Loaded -> {
-                        adapter.update(state.heroes)
+                        adapter.update(state.heroes, state.forceUpdateList)
                     }
                 }
             }
+        }
+    }
+
+    private fun setListeners() {
+        binding.btHealAll.setOnClickListener {
+            viewModel.healAllHeroes()
         }
     }
 }
