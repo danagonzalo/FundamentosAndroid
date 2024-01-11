@@ -1,12 +1,13 @@
 package com.example.fundamentosandroid
 
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.fundamentosandroid.databinding.ItemHeroListBinding
-import okhttp3.internal.notifyAll
 
 class HeroesListAdapter(val callback: Callback): RecyclerView.Adapter<HeroesListAdapter.HeroesListViewHolder>() {
 
@@ -24,6 +25,13 @@ class HeroesListAdapter(val callback: Callback): RecyclerView.Adapter<HeroesList
                     .load(hero.photo)
                     .centerCrop()
                     .into(ivHeroPhoto)
+
+                if(hero.isDead) {
+                    tvNotAvailable.visibility = View.VISIBLE
+                    root.isEnabled = false
+                    constraintLayout.setBackgroundColor(ContextCompat.getColor(root.context, R.color.gray))
+                    ivHeroPhoto.setColorFilter(R.color.gray)
+                }
 
                 root.setOnClickListener {
                     callback.heroClicked(hero)

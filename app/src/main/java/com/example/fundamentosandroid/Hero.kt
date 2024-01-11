@@ -14,7 +14,7 @@ data class Hero(
 ) {
     fun damage() {
         hp -= Random.nextInt(10, 60)
-        if (hp < 0)  {
+        if (hp <= 0)  {
             hp = 0
             isDead = true
         }
