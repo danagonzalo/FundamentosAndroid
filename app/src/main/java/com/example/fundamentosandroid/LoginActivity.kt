@@ -30,6 +30,7 @@ class LoginActivity : AppCompatActivity() {
                     is LoginViewModel.LoginState.Loading -> showLoading(true)
                     is LoginViewModel.LoginState.Success -> {
                         showLoading(true)
+                        Constants.token = state.token
                         goToHeroesList()
                     }
                     is LoginViewModel.LoginState.Error -> {

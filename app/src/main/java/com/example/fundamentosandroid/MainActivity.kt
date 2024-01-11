@@ -22,11 +22,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        goToHeroesList()
     }
 
     private fun goToHeroesList() {
-        //supportFragmentManager.beginTransaction()
-        //    .replace(binding.fragmentContainer.id,)
+        supportFragmentManager.beginTransaction()
+            .replace(binding.fragmentContainer.id, HeroesListFragment())
+            .commit()
     }
 
     private fun goToHeroDetail() {

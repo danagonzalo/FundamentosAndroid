@@ -26,9 +26,10 @@ class LoginViewModel: ViewModel() {
     fun login(user: String, password: String) {
         if (userIsValid(user) && passwordIsValid(password)) {
             viewModelScope.launch(Dispatchers.IO) {
-                val client = OkHttpClient()
-                val url = "https://dragonball.keepcoding.education/api/auth/login"
-                val credentials = Credentials.basic(user, password)
+                val url = Constants.loginUrl
+
+                //val credentials = Credentials.basic(user, password)
+                val credentials = Credentials.basic("damdgonzalo@gmail.com", "123456")
                 val formBody = FormBody.Builder().build()
 
                 val request = Request.Builder()
@@ -37,6 +38,7 @@ class LoginViewModel: ViewModel() {
                     .post(formBody)
                     .build()
 
+                val client = OkHttpClient()
                 val call = client.newCall(request)
                 val response = call.execute()
 
