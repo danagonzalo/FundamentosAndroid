@@ -13,55 +13,56 @@ import okhttp3.Request
 
 class LoginViewModel: ViewModel() {
 
-    private val _uiState = MutableStateFlow<LoginState>(LoginState.NotLoggedIn)
-    val uiState: StateFlow<LoginState> = _uiState
+    private val _uiState = MutableStateFlow<State>(State.NotLoggedIn)
+    val uiState: StateFlow<State> = _uiState
 
-    sealed class LoginState {
-        data object NotLoggedIn: LoginState()
-        data object Loading: LoginState()
-        data class Success(val token: String): LoginState()
-        data class Error(val message: String): LoginState()
+    sealed class State {
+        data object NotLoggedIn: State()
+        data object Loading: State()
+        data class Success(val token: String): State()
+        data class Error(val message: String): State()
     }
 
     fun login(user: String, password: String) {
-        if (userIsValid(user) && passwordIsValid(password)) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val url = Constants.loginUrl
+        viewModelScope.launch(Dispatchers.IO) {
+            _uiState.value = State.Loading
 
-                //val credentials = Credentials.basic(user, password)
-                val credentials = Credentials.basic("damdgonzalo@gmail.com", "123456")
-                val formBody = FormBody.Builder().build()
+            val url = Constants.loginUrl
 
-                val request = Request.Builder()
-                    .url(url)
-                    .addHeader("Authorization", credentials)
-                    .post(formBody)
-                    .build()
+            val credentials = Credentials.basic(user, password)
+            //val credentials = Credentials.basic("damdgonzalo@gmail.com", "123456")
+            val formBody = FormBody.Builder().build()
 
-                val client = OkHttpClient()
-                val call = client.newCall(request)
-                val response = call.execute()
+            val request = Request.Builder()
+                .url(url)
+                .addHeader("Authorization", credentials)
+                .post(formBody)
+                .build()
 
-                if (response.isSuccessful) {
-                    _uiState.value = response.body?.let {
-                        LoginState.Success(it.string())
-                    } ?: LoginState.Error("Token vacío")
-                } else _uiState.value = LoginState.Error(response.message)
-            }
+            val client = OkHttpClient()
+            val call = client.newCall(request)
+            val response = call.execute()
+
+            if (response.isSuccessful) {
+                _uiState.value = response.body?.let {
+                    State.Success(it.string())
+                } ?: State.Error("Token vacío")
+            } else _uiState.value = State.Error(response.message)
         }
+
     }
 
-    private fun userIsValid(user: String): Boolean {
+    /*private fun userIsValid(user: String): Boolean {
         return if (user.isBlank()) {
-            _uiState.value = LoginState.Error("Introduce un usuario")
+            _uiState.value = LoginState.InvalidCredentials
             false
         } else true
     }
 
     private fun passwordIsValid(password: String): Boolean {
         return if (password.isBlank()) {
-            _uiState.value = LoginState.Error("Introduce una contraseña")
+            _uiState.value = LoginState.InvalidCredentials
             false
         } else true
-    }
+    }*/
 }

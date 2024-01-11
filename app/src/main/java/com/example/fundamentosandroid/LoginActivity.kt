@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.example.fundamentosandroid.databinding.ActivityLoginBinding
 import kotlinx.coroutines.launch
@@ -18,6 +19,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setViews()
         setObservers()
         setListeners()
     }
@@ -26,25 +28,39 @@ class LoginActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.uiState.collect() { state ->
                 when(state) {
-                    is LoginViewModel.LoginState.NotLoggedIn -> showLoading(false)
-                    is LoginViewModel.LoginState.Loading -> showLoading(true)
-                    is LoginViewModel.LoginState.Success -> {
-                        showLoading(true)
-                        Constants.token = state.token
+                    is LoginViewModel.State.NotLoggedIn -> showLoading(false)
+                    is LoginViewModel.State.Loading -> showLoading(true)
+                    is LoginViewModel.State.Success -> {
+                        Constants.token = state.token // guardamos el token
                         goToHeroesList()
                     }
-                    is LoginViewModel.LoginState.Error -> {
+                    is LoginViewModel.State.Error -> {
                         showLoading(false)
-                        Toast.makeText(this@LoginActivity, state.message, Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@LoginActivity, state.message, Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         }
     }
 
+
+    private fun setViews() {
+        with(binding) {
+            btLogin.isEnabled = false
+
+            etUser.doAfterTextChanged {
+                btLogin.isEnabled = etUser.text.toString().isNotEmpty() && etPassword.text.toString().isNotEmpty()
+            }
+
+            etPassword.doAfterTextChanged {
+                btLogin.isEnabled = etUser.text.toString().isNotEmpty() && etPassword.text.toString().isNotEmpty()
+            }
+        }
+    }
     private fun setListeners() {
         with(binding) {
             btLogin.setOnClickListener {
+                showLoading(true)
                 viewModel.login(etUser.text.toString(), etPassword.text.toString())
             }
         }
