@@ -1,15 +1,18 @@
 package com.example.fundamentosandroid
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.fundamentosandroid.databinding.ItemHeroListBinding
+import okhttp3.internal.notifyAll
 
 class HeroesListAdapter(val callback: Callback): RecyclerView.Adapter<HeroesListAdapter.HeroesListViewHolder>() {
 
-    private var heroesList: Heroes = emptyList()
+    private var heroesList: Heroes = emptyList<Hero>().toMutableList()
     class HeroesListViewHolder(private val binding: ItemHeroListBinding, val callback: Callback): RecyclerView.ViewHolder(binding.root) {
+
         fun showItem(hero: Hero) {
             with(binding) {
                 tvHeroName.text = hero.name
@@ -43,8 +46,18 @@ class HeroesListAdapter(val callback: Callback): RecyclerView.Adapter<HeroesList
     }
 
     fun update(heroesList: Heroes) {
-        this.heroesList = heroesList
-        notifyDataSetChanged()
+        if (this.heroesList.isEmpty()) {
+            this.heroesList = heroesList
+            notifyDataSetChanged()
+        }
     }
 
+    fun updateHero(hero: Hero, newHealth: Int) {
+        heroesList.forEachIndexed { index, item ->
+            if (item.id == hero.id) {
+                item.hp = newHealth
+                notifyItemChanged(index)
+            }
+        }
+    }
 }

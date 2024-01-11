@@ -1,6 +1,5 @@
 package com.example.fundamentosandroid
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
@@ -14,13 +13,13 @@ import okhttp3.Request
 
 class HeroesListViewModel: ViewModel() {
 
-    private val _uiState = MutableStateFlow<HeroesListState>(HeroesListState.Loading)
-    val uiState: StateFlow<HeroesListState> = _uiState
+    private val _uiState = MutableStateFlow<State>(State.Normal)
+    val uiState: StateFlow<State> = _uiState
 
-    sealed class HeroesListState {
-        data object Loading: HeroesListState()
-        data class Loaded(val heroes: Heroes): HeroesListState()
-        data class Error(val message: String): HeroesListState()
+    sealed class State {
+        data object Normal: State()
+        data class Loaded(val heroes: Heroes): State()
+        data class Error(val message: String): State()
     }
 
     fun loadHeroes() {
@@ -45,10 +44,10 @@ class HeroesListViewModel: ViewModel() {
                 val heroesDtoList =  Gson().fromJson(response.body?.string(), Array<HeroDto>::class.java)
                 val heroesList = heroesDtoList.map { hero ->
                     Hero(hero.id, hero.name, hero.photo)
-                }
-                _uiState.value = HeroesListState.Loaded(heroesList)
+                }.toMutableList()
+                _uiState.value = State.Loaded(heroesList)
             }
-            else _uiState.value = HeroesListState.Error(response.message)
+            else _uiState.value = State.Error(response.message)
         }
     }
 }

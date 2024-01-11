@@ -3,7 +3,7 @@ package com.example.fundamentosandroid
 import android.util.Log
 import kotlin.random.Random
 
-typealias Heroes = List<Hero>
+typealias Heroes = MutableList<Hero>
 
 data class Hero(
     val id: String,
@@ -13,18 +13,21 @@ data class Hero(
     var isDead: Boolean = false
 ) {
     fun damage() {
-        Log.i("AWUUU","HERO DAMAGED ${name}")
-
         hp -= Random.nextInt(10, 60)
+        if (hp < 0)  {
+            hp = 0
+            isDead = true
+        }
     }
 
     fun heal() {
-        Log.i("AWUUU","HERO HEAL ${name}")
-
         hp += 20
+        if (hp > 100) hp = 100
+
     }
 
     fun fullHeal() {
         hp = 100
+        isDead = false
     }
 }

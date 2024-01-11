@@ -31,9 +31,9 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
-    fun showHeroDetail(hero: Hero) {
+    fun showHeroDetail(hero: Hero, callback: Callback) {
         supportFragmentManager.beginTransaction()
-            .replace(binding.fragmentContainer.id, HeroDetailFragment(hero))
+        .replace(binding.fragmentContainer.id, HeroDetailFragment(callback))
             .addToBackStack(null)
             .commit()
     }

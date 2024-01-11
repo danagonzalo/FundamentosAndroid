@@ -1,6 +1,7 @@
 package com.example.fundamentosandroid
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,8 @@ import com.example.fundamentosandroid.databinding.FragmentHeroesListBinding
 import kotlinx.coroutines.launch
 
 interface Callback {
+    var selectedHero: Hero?
+    fun updateHero(newHealth: Int)
     fun heroClicked(hero: Hero)
 }
 
@@ -22,23 +25,34 @@ class HeroesListFragment: Fragment(), Callback {
     private val viewModel: HeroesListViewModel by activityViewModels()
     private val adapter = HeroesListAdapter(this)
 
+    override var selectedHero: Hero? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        viewModel.loadHeroes()
         binding = FragmentHeroesListBinding.inflate(inflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        selectedHero = null
         setAdapter()
         setObservers()
-        viewModel.loadHeroes()
     }
 
     override fun heroClicked(hero: Hero) {
-        (activity as MainActivity).showHeroDetail(hero)
+        selectedHero = hero
+        Log.i("AWUUU", "HERO CLICKED!!!!! ${selectedHero?.name}")
+
+        (activity as MainActivity).showHeroDetail(selectedHero!!, this)
+    }
+
+    override fun updateHero(newHealth: Int) {
+        Log.i("AWUUU", "UPDATING HERO HEALTH..... ${selectedHero?.name} - $newHealth")
+        adapter.updateHero(selectedHero!!, newHealth)
     }
 
     // Configuramos recycler view
@@ -51,11 +65,11 @@ class HeroesListFragment: Fragment(), Callback {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collect { state ->
                 when (state) {
-                    is HeroesListViewModel.HeroesListState.Loading -> { }
-                    is HeroesListViewModel.HeroesListState.Error -> {
+                    is HeroesListViewModel.State.Normal -> { }
+                    is HeroesListViewModel.State.Error -> {
                         Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
                     }
-                    is HeroesListViewModel.HeroesListState.Loaded -> {
+                    is HeroesListViewModel.State.Loaded -> {
                         adapter.update(state.heroes)
                     }
                 }
