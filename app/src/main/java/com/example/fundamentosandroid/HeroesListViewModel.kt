@@ -51,5 +51,4 @@ class HeroesListViewModel: ViewModel() {
             else _uiState.value = HeroesListState.Error(response.message)
         }
     }
-
 }

@@ -12,11 +12,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fundamentosandroid.databinding.FragmentHeroesListBinding
 import kotlinx.coroutines.launch
 
-class HeroesListFragment: Fragment() {
+interface Callback {
+    fun heroClicked(hero: Hero)
+}
+
+class HeroesListFragment: Fragment(), Callback {
 
     private lateinit var binding: FragmentHeroesListBinding
     private val viewModel: HeroesListViewModel by activityViewModels()
-    private val adapter = HeroesListAdapter()
+    private val adapter = HeroesListAdapter(this)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +35,10 @@ class HeroesListFragment: Fragment() {
         setAdapter()
         setObservers()
         viewModel.loadHeroes()
+    }
+
+    override fun heroClicked(hero: Hero) {
+        (activity as MainActivity).showHeroDetail(hero)
     }
 
     // Configuramos recycler view

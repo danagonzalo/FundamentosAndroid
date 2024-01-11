@@ -13,7 +13,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/ivPhoto"
+            android:id="@+id/ivHeroPhoto"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:scaleType="centerCrop"
@@ -51,8 +51,8 @@
             android:id="@+id/tvHealthText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@id/ivPhoto"
-            app:layout_constraintBottom_toBottomOf="@id/ivPhoto"
+            app:layout_constraintStart_toEndOf="@id/ivHeroPhoto"
+            app:layout_constraintBottom_toBottomOf="@id/ivHeroPhoto"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginHorizontal="20dp"
             android:fontFamily="monospace"

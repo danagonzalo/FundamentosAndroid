@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.fundamentosandroid.databinding.ActivityLoginBinding
 import com.example.fundamentosandroid.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -23,16 +22,19 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        goToHeroesList()
+        showHeroesList()
     }
 
-    private fun goToHeroesList() {
+    private fun showHeroesList() {
         supportFragmentManager.beginTransaction()
             .replace(binding.fragmentContainer.id, HeroesListFragment())
             .commit()
     }
 
-    private fun goToHeroDetail() {
-
+    fun showHeroDetail(hero: Hero) {
+        supportFragmentManager.beginTransaction()
+            .replace(binding.fragmentContainer.id, HeroDetailFragment(hero))
+            .addToBackStack(null)
+            .commit()
     }
 }
