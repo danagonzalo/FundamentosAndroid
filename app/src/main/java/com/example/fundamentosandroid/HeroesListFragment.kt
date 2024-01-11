@@ -2,6 +2,7 @@ package com.example.fundamentosandroid
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -82,11 +83,14 @@ class HeroesListFragment: Fragment(), Callback {
 
     private fun loadHeroesList() {
         // buscamos datos en shared preferences
-        val heroesListStored = getHeroesFromPreferences()
+        val heroesListString = getHeroesFromPreferences()
 
         // si no hay nada, descarga los heroes de la api
-        if (heroesListStored.isEmpty()) viewModel.downloadHeroesFromApi()
-        else viewModel.loadHeroesIntoList(heroesListStored)
+        if (heroesListString.isEmpty()) { viewModel.downloadHeroesFromApi() }
+        else {
+            val heroesListStored = Gson().fromJson(heroesListString, Array<Hero>::class.java).toMutableList()
+            viewModel.loadHeroesIntoList(heroesListStored)
+        }
     }
 
     private fun saveHeroesList(heroesList: MutableList<Hero>) {
@@ -98,10 +102,8 @@ class HeroesListFragment: Fragment(), Callback {
         }
     }
 
-    private fun getHeroesFromPreferences(): MutableList<Hero> {
+    private fun getHeroesFromPreferences(): String {
         val sharedPreferences = activity?.getPreferences(Context.MODE_PRIVATE)
-        val heroesListJson = sharedPreferences?.getString(Constants.TAG_HEROES_LIST, "")
-
-        return Gson().fromJson(heroesListJson, Array<Hero>::class.java).toMutableList()
+        return sharedPreferences?.getString(Constants.TAG_HEROES_LIST, "") ?: ""
     }
 }
