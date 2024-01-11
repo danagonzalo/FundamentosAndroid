@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="20dp"
     app:cardCornerRadius="20dp">
@@ -13,44 +13,51 @@
 
         <ImageView
             android:id="@+id/ivPhoto"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:scaleType="centerCrop"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvHeroName"
+            app:layout_constraintBottom_toBottomOf="@id/tvHealthText"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             tools:src="@mipmap/ic_launcher"
             android:contentDescription="Hero"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tvHeroName"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/ivPhoto"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/pbHealth"
+            app:layout_constraintEnd_toEndOf="@id/pbHealth"
+            app:layout_constraintBottom_toTopOf="@id/pbHealth"
+            android:layout_marginBottom="8dp"
+            android:textSize="16sp"
+            android:fontFamily="monospace"
+            tools:text="Hero name here"/>
+
+        <ProgressBar
+            android:id="@+id/pbHealth"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:progressTint="@color/green"
+            app:layout_constraintStart_toStartOf="@id/tvHealthText"
+            app:layout_constraintBottom_toTopOf="@id/tvHealthText"
+            app:layout_constraintEnd_toEndOf="@id/tvHealthText"
+            tools:layout_editor_absoluteY="0dp"
+            tools:progress="75"/>
+
+        <TextView
+            android:id="@+id/tvHealthText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/ivPhoto"
+            app:layout_constraintBottom_toBottomOf="@id/ivPhoto"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="10dp">
+            android:fontFamily="monospace"
+            android:gravity="end"
+            tools:text="75/100 HP" />
 
-            <ProgressBar
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                android:progressTint="@color/green"
-                app:layout_constraintTop_toBottomOf="@id/ivPhoto"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:progress="75"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="monospace"
-                android:gravity="end"
-                tools:text="75/100 HP" />
-
-        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
