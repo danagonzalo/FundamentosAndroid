@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.fundamentosandroid.databinding.ItemHeroListBinding
 
-class HeroesListAdapter(val callback: Callback): RecyclerView.Adapter<HeroesListAdapter.HeroesListViewHolder>() {
+class HeroesListAdapter(private val callback: Callback): RecyclerView.Adapter<HeroesListAdapter.HeroesListViewHolder>() {
 
     private var heroesList: Heroes = emptyList<Hero>().toMutableList()
     class HeroesListViewHolder(private val binding: ItemHeroListBinding, val callback: Callback): RecyclerView.ViewHolder(binding.root) {
@@ -31,6 +31,11 @@ class HeroesListAdapter(val callback: Callback): RecyclerView.Adapter<HeroesList
                     root.isEnabled = false
                     constraintLayout.setBackgroundColor(ContextCompat.getColor(root.context, R.color.gray))
                     ivHeroPhoto.setColorFilter(R.color.gray)
+                } else {
+                    tvNotAvailable.visibility = View.GONE
+                    root.isEnabled = true
+                    constraintLayout.setBackgroundColor(ContextCompat.getColor(root.context, R.color.white))
+                    ivHeroPhoto.clearColorFilter()
                 }
 
                 root.setOnClickListener {

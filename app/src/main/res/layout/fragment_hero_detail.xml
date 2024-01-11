@@ -74,7 +74,7 @@
                 android:textSize="30sp"
                 android:textColor="@color/white"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:backgroundTint="@color/green"/>
+                android:backgroundTint="@color/heal_blue"/>
 
             <Button
                 android:id="@+id/btDamage"
