@@ -64,9 +64,8 @@ class HeroesListFragment: Fragment(), Callback {
             viewModel.uiState.collect { state ->
                 when (state) {
                     is HeroesListViewModel.State.Normal -> { }
-                    is HeroesListViewModel.State.Error -> {
+                    is HeroesListViewModel.State.Error ->
                         Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
-                    }
                     is HeroesListViewModel.State.Loaded -> {
                         adapter.update(state.heroes)
                         saveHeroesList(state.heroes)
@@ -77,14 +76,17 @@ class HeroesListFragment: Fragment(), Callback {
     }
 
     private fun setListeners() {
+        // devuelve a todos los héroes al máximo de vida
         binding.btHealAll.setOnClickListener {
             viewModel.healAllHeroes()
         }
     }
 
     private fun loadHeroesList() {
+        // buscamos datos en shared preferences
         val heroesListStored = getHeroesFromPreferences()
 
+        // si no hay nada, descarga los heroes de la api
         if (heroesListStored.isEmpty()) viewModel.downloadHeroesFromApi()
         else viewModel.loadHeroesIntoList(heroesListStored)
     }

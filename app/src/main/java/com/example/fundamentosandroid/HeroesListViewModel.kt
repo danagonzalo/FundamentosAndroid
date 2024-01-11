@@ -19,7 +19,7 @@ class HeroesListViewModel: ViewModel() {
 
     sealed class State {
         data object Normal: State()
-        data class Loaded(val heroes: MutableList<Hero>, val forceUpdateList: Boolean = false): State()
+        data class Loaded(val heroes: MutableList<Hero>): State()
         data class Error(val message: String): State()
     }
 
@@ -58,10 +58,7 @@ class HeroesListViewModel: ViewModel() {
     }
 
     fun healAllHeroes() {
-        heroesList.forEach {
-            it.fullHeal()
-        }
-
-        _uiState.value = State.Loaded(heroesList, true)
+        heroesList.forEach { it.fullHeal() }
+        _uiState.value = State.Loaded(heroesList)
     }
 }
