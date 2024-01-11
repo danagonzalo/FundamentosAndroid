@@ -20,12 +20,19 @@
         android:layout_marginHorizontal="50dp"
         android:hint="Usuario"
         android:inputType="textEmailAddress"
-        android:textSize="20sp">
+        android:textSize="20sp"
+        app:boxBackgroundColor="@color/light_gray"
+        app:placeholderTextColor="@color/dark_red"
+        app:prefixTextColor="@color/dark_red"
+        app:suffixTextColor="@color/dark_red">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etUser"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:alpha="0.5"
+            android:textColorHighlight="@color/dark_red"
+            android:textColorLink="@color/dark_red" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -37,22 +44,32 @@
         android:elegantTextHeight="false"
         android:hint="Contraseña"
         android:inputType="textPassword"
-        android:textSize="20sp">
+        android:textSize="20sp"
+        app:boxBackgroundColor="@color/light_gray"
+        app:placeholderTextColor="@color/dark_red"
+        app:prefixTextColor="@color/dark_red"
+        app:suffixTextColor="@color/dark_red">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:alpha="0.5"
+            android:textColorHighlight="@color/dark_red"
+            android:textColorLink="@color/dark_red" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/btLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/login_button_text"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
         android:layout_gravity="center"
-        android:layout_margin="20dp"/>
+        android:layout_margin="20dp"
+        android:text="@string/login_button_text"
+        android:textColor="@color/gray"
+        android:textSize="20sp"/>
 
     <ProgressBar
         android:id="@+id/pbLoading"

@@ -47,16 +47,19 @@ class LoginActivity : AppCompatActivity() {
     private fun setViews() {
         with(binding) {
             btLogin.isEnabled = false
-
-            etUser.doAfterTextChanged {
-                btLogin.isEnabled = etUser.text.toString().isNotEmpty() && etPassword.text.toString().isNotEmpty()
-            }
-
-            etPassword.doAfterTextChanged {
-                btLogin.isEnabled = etUser.text.toString().isNotEmpty() && etPassword.text.toString().isNotEmpty()
-            }
+            etUser.doAfterTextChanged {  setLoginButton() }
+            etPassword.doAfterTextChanged { setLoginButton() }
         }
     }
+
+    private fun setLoginButton() {
+        with(binding) {
+            btLogin.isEnabled = etUser.text.toString().isNotEmpty() && etPassword.text.toString().isNotEmpty()
+            if (btLogin.isEnabled) btLogin.setTextColor(root.context.getColor(R.color.dark_red))
+            else btLogin.setTextColor(root.context.getColor(R.color.gray))
+     }
+    }
+
     private fun setListeners() {
         with(binding) {
             btLogin.setOnClickListener {

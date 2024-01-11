@@ -1,5 +1,6 @@
 package com.example.fundamentosandroid
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
@@ -58,7 +59,14 @@ class HeroesListViewModel: ViewModel() {
     }
 
     fun healAllHeroes() {
-        heroesList.forEach { it.fullHeal() }
+        heroesList = heroesList.map {
+            Hero(it.id, it.name, it.photo, 100)
+            //it.fullHeal()
+        }.toMutableList()
+
+        // esta linea no cambia el estado _uiState.value
+        // heroesList.forEach { it.fullHeal() }
+
         _uiState.value = State.Loaded(heroesList)
     }
 }

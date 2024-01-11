@@ -77,9 +77,7 @@ class HeroesListFragment: Fragment(), Callback {
 
     private fun setListeners() {
         // devuelve a todos los héroes al máximo de vida
-        binding.btHealAll.setOnClickListener {
-            viewModel.healAllHeroes()
-        }
+        binding.btHealAll.setOnClickListener { viewModel.healAllHeroes() }
     }
 
     private fun loadHeroesList() {

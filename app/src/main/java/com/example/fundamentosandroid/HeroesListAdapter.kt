@@ -1,6 +1,7 @@
 package com.example.fundamentosandroid
 
 import android.content.res.ColorStateList
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,7 @@ class HeroesListAdapter(private val callback: Callback): RecyclerView.Adapter<He
                     .with(root)
                     .load(hero.photo)
                     .centerCrop()
+                    .placeholder(R.drawable.baseline_person_24)
                     .into(ivHeroPhoto)
 
                 if(hero.isDead) {

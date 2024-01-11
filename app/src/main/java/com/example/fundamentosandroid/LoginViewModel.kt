@@ -25,12 +25,11 @@ class LoginViewModel: ViewModel() {
 
     fun login(user: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
+
             _uiState.value = State.Loading
 
             val url = Constants.loginUrl
-
             val credentials = Credentials.basic(user, password)
-            //val credentials = Credentials.basic("damdgonzalo@gmail.com", "123456")
             val formBody = FormBody.Builder().build()
 
             val request = Request.Builder()
@@ -51,18 +50,4 @@ class LoginViewModel: ViewModel() {
         }
 
     }
-
-    /*private fun userIsValid(user: String): Boolean {
-        return if (user.isBlank()) {
-            _uiState.value = LoginState.InvalidCredentials
-            false
-        } else true
-    }
-
-    private fun passwordIsValid(password: String): Boolean {
-        return if (password.isBlank()) {
-            _uiState.value = LoginState.InvalidCredentials
-            false
-        } else true
-    }*/
 }

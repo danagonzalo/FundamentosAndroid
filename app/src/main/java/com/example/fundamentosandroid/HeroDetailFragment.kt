@@ -66,6 +66,7 @@ class HeroDetailFragment(private val callback: Callback) : Fragment() {
             Glide
                 .with(root)
                 .load(hero.photo)
+                .placeholder(R.drawable.baseline_person_24)
                 .centerCrop()
                 .into(ivHeroPhoto)
         }
