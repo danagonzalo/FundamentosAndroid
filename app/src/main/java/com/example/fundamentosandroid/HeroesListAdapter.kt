@@ -1,5 +1,6 @@
 package com.example.fundamentosandroid
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,7 @@ import com.example.fundamentosandroid.databinding.ItemHeroListBinding
 
 class HeroesListAdapter(private val callback: Callback): RecyclerView.Adapter<HeroesListAdapter.HeroesListViewHolder>() {
 
-    private var heroesList: Heroes = emptyList<Hero>().toMutableList()
+    private var heroesList = mutableListOf<Hero>()
     class HeroesListViewHolder(private val binding: ItemHeroListBinding, val callback: Callback): RecyclerView.ViewHolder(binding.root) {
 
         fun showItem(hero: Hero) {
@@ -27,17 +28,18 @@ class HeroesListAdapter(private val callback: Callback): RecyclerView.Adapter<He
                     .into(ivHeroPhoto)
 
                 if(hero.isDead) {
-                    root.isEnabled = false
                     constraintLayout.setBackgroundColor(ContextCompat.getColor(root.context, R.color.gray))
                     ivHeroPhoto.setColorFilter(R.color.gray)
+                    pbHealth.progressBackgroundTintList = ColorStateList.valueOf(root.context.getColor(R.color.dark_gray))
                 } else {
-                    root.isEnabled = true
                     constraintLayout.setBackgroundColor(ContextCompat.getColor(root.context, R.color.white))
                     ivHeroPhoto.clearColorFilter()
+                    pbHealth.progressBackgroundTintList = ColorStateList.valueOf(root.context.getColor(R.color.light_gray))
                 }
 
                 root.setOnClickListener {
-                    callback.heroClicked(hero)
+                    if (hero.isDead) Toast.makeText(root.context, "¡Cura a ${hero.name}!", Toast.LENGTH_LONG).show()
+                    else callback.heroClicked(hero)
                 }
             }
         }
@@ -56,16 +58,14 @@ class HeroesListAdapter(private val callback: Callback): RecyclerView.Adapter<He
         holder.showItem(heroesList[position])
     }
 
-    fun update(heroesList: Heroes, isForceUpdate: Boolean) {
-        if (this.heroesList.isEmpty() || isForceUpdate) {
-            this.heroesList = heroesList
-            notifyDataSetChanged()
-        }
+    fun update(heroesList: MutableList<Hero>) {
+        this.heroesList = heroesList
+        notifyDataSetChanged()
     }
 
-    fun updateHero(hero: Hero, newHealth: Int) {
+    fun updateHero(heroId: String, newHealth: Int) {
         heroesList.forEachIndexed { index, item ->
-            if (item.id == hero.id) {
+            if (item.id == heroId) {
                 item.hp = newHealth
                 notifyItemChanged(index)
             }

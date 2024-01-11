@@ -1,5 +1,6 @@
 package com.example.fundamentosandroid
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -28,8 +29,8 @@ class HeroDetailFragment(private val callback: Callback) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.i("AWUUU", "HERO  SELECTED IN DETAIL ${callback.selectedHero!!.name}")
-        showHero(callback.selectedHero!!)
+        Log.i("AWUUU", "HERO  SELECTED IN DETAIL ${callback.selectedHero.name}")
+        showHero(callback.selectedHero)
         setObservers()
         setListeners()
     }
@@ -38,20 +39,17 @@ class HeroDetailFragment(private val callback: Callback) : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collect { state ->
                 when(state) {
-                    is HeroDetailViewModel.State.Normal -> { Log.i("AWUUU", "nothing happened") }
+                    is HeroDetailViewModel.State.Normal -> { }
                     is HeroDetailViewModel.State.Error -> {
                         Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
                     }
                     is HeroDetailViewModel.State.HeroChanged -> {
-                        Log.i("AWUUU", "HERO CHANGED FROM DETAIL ${callback.selectedHero!!.name}")
-
                         callback.updateHero(state.newHealth)
                         updateHealth(state.newHealth)
                     }
                     is HeroDetailViewModel.State.HeroDied -> {
-                        Log.i("AWUUU", "HERO DIED FROM DETAIL ${callback.selectedHero!!.name}")
-
                         callback.updateHero(state.newHealth)
+                        // vuelve a la lista de héroes
                         parentFragmentManager.popBackStack()
                     }
                 }
@@ -80,11 +78,13 @@ class HeroDetailFragment(private val callback: Callback) : Fragment() {
 
     private fun setListeners() {
         binding.btHeal.setOnClickListener {
-            viewModel.heal(callback.selectedHero!!)
+            if (callback.selectedHero.hp == 100)
+                Toast.makeText(context, "¡${callback.selectedHero.name} está a tope!", Toast.LENGTH_LONG).show()
+            else viewModel.heal(callback.selectedHero)
         }
 
         binding.btDamage.setOnClickListener {
-            viewModel.damage(callback.selectedHero!!)
+            viewModel.damage(callback.selectedHero)
         }
     }
 }

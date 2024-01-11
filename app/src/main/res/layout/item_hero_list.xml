@@ -42,12 +42,11 @@
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:progressTint="@color/green"
             app:layout_constraintStart_toStartOf="@id/tvHealthText"
             app:layout_constraintBottom_toTopOf="@id/tvHealthText"
             app:layout_constraintEnd_toEndOf="@id/tvHealthText"
-            tools:layout_editor_absoluteY="0dp"
-            tools:progress="75"/>
+            android:progressDrawable="@drawable/gradient_progressbar"
+            tools:progress="75" />
 
         <TextView
             android:id="@+id/tvHealthText"

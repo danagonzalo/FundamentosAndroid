@@ -35,7 +35,7 @@
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
-            android:progressTint="@color/green"
+            android:progressDrawable="@drawable/gradient_progressbar"
             app:layout_constraintTop_toBottomOf="@id/tvHeroName"
             app:layout_constraintStart_toStartOf="@id/tvHeroName"
             app:layout_constraintEnd_toEndOf="@id/tvHeroName"

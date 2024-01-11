@@ -1,7 +1,7 @@
 package com.example.fundamentosandroid
 
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,10 +11,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fundamentosandroid.databinding.FragmentHeroesListBinding
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
 interface Callback {
-    var selectedHero: Hero?
+    var selectedHero: Hero
     fun updateHero(newHealth: Int)
     fun heroClicked(hero: Hero)
 }
@@ -25,7 +26,7 @@ class HeroesListFragment: Fragment(), Callback {
     private val viewModel: HeroesListViewModel by activityViewModels()
     private val adapter = HeroesListAdapter(this)
 
-    override var selectedHero: Hero? = null
+    override var selectedHero = Hero()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,22 +38,19 @@ class HeroesListFragment: Fragment(), Callback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.loadHeroes()
         setAdapter()
         setObservers()
         setListeners()
+        loadHeroesList()
     }
 
     override fun heroClicked(hero: Hero) {
         selectedHero = hero
-        Log.i("AWUUU", "HERO CLICKED!!!!! ${selectedHero?.name}")
-
-        (activity as MainActivity).showHeroDetail(selectedHero!!, this)
+        (activity as MainActivity).showHeroDetail(this)
     }
 
     override fun updateHero(newHealth: Int) {
-        Log.i("AWUUU", "UPDATING HERO HEALTH..... ${selectedHero?.name} - $newHealth")
-        adapter.updateHero(selectedHero!!, newHealth)
+        adapter.updateHero(selectedHero.id, newHealth)
     }
 
     // Configuramos recycler view
@@ -70,7 +68,8 @@ class HeroesListFragment: Fragment(), Callback {
                         Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
                     }
                     is HeroesListViewModel.State.Loaded -> {
-                        adapter.update(state.heroes, state.forceUpdateList)
+                        adapter.update(state.heroes)
+                        saveHeroesList(state.heroes)
                     }
                 }
             }
@@ -81,5 +80,28 @@ class HeroesListFragment: Fragment(), Callback {
         binding.btHealAll.setOnClickListener {
             viewModel.healAllHeroes()
         }
+    }
+
+    private fun loadHeroesList() {
+        val heroesListStored = getHeroesFromPreferences()
+
+        if (heroesListStored.isEmpty()) viewModel.downloadHeroesFromApi()
+        else viewModel.loadHeroesIntoList(heroesListStored)
+    }
+
+    private fun saveHeroesList(heroesList: MutableList<Hero>) {
+        val sharedPreferences = activity?.getPreferences(Context.MODE_PRIVATE)
+
+        with(sharedPreferences?.edit()) {
+            this?.putString(Constants.TAG_HEROES_LIST, Gson().toJson(heroesList))
+            this?.commit()
+        }
+    }
+
+    private fun getHeroesFromPreferences(): MutableList<Hero> {
+        val sharedPreferences = activity?.getPreferences(Context.MODE_PRIVATE)
+        val heroesListJson = sharedPreferences?.getString(Constants.TAG_HEROES_LIST, "")
+
+        return Gson().fromJson(heroesListJson, Array<Hero>::class.java).toMutableList()
     }
 }

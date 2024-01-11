@@ -19,11 +19,11 @@ class HeroesListViewModel: ViewModel() {
 
     sealed class State {
         data object Normal: State()
-        data class Loaded(val heroes: Heroes, val forceUpdateList: Boolean = false): State()
+        data class Loaded(val heroes: MutableList<Hero>, val forceUpdateList: Boolean = false): State()
         data class Error(val message: String): State()
     }
 
-    fun loadHeroes() {
+    fun downloadHeroesFromApi() {
         viewModelScope.launch(Dispatchers.IO) {
             val url = Constants.heroesUrl
 
@@ -43,13 +43,18 @@ class HeroesListViewModel: ViewModel() {
 
             if (response.isSuccessful) {
                 val heroesDtoList =  Gson().fromJson(response.body?.string(), Array<HeroDto>::class.java)
-                heroesList = heroesDtoList.map { hero ->
+                val list = heroesDtoList.map { hero ->
                     Hero(hero.id, hero.name, hero.photo)
                 }.toMutableList()
-                _uiState.value = State.Loaded(heroesList)
+                loadHeroesIntoList(list)
             }
             else _uiState.value = State.Error(response.message)
         }
+    }
+
+    fun loadHeroesIntoList(heroes: MutableList<Hero>) {
+        heroesList = heroes
+        _uiState.value = State.Loaded(heroesList)
     }
 
     fun healAllHeroes() {

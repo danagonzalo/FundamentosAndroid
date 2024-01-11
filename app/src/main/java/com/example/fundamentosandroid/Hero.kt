@@ -3,12 +3,10 @@ package com.example.fundamentosandroid
 import android.util.Log
 import kotlin.random.Random
 
-typealias Heroes = MutableList<Hero>
-
 data class Hero(
-    val id: String,
-    val name: String,
-    val photo: String,
+    val id: String = "",
+    val name: String = "",
+    val photo: String = "",
     var hp: Int = 100,
     var isDead: Boolean = false
 ) {
